@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Expert Survey</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#14181f;--mute:#667085;--line:#e4e7ec;--acc:#0b7a4b;--accbg:#e3f4ec;--hi:#fff3bf;--r1:#0b7a4b;--r2:#3b82a6;--r3:#8a94a6}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e1116;--card:#171b22;--ink:#e8ebf0;--mute:#98a2b3;--line:#262c36;--acc:#3ddc97;--accbg:#12332a;--hi:#4a3f0a;--r1:#3ddc97;--r2:#5fb4dc;--r3:#8a94a6}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:22px;margin:0 0 2px}.sub{color:var(--mute);margin:0 0 14px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px}
+.tabs,.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+button{font:inherit;color:inherit;background:none;border:0;padding:7px 14px;cursor:pointer}
+button.on{background:var(--acc);color:#fff}
+.note{font-size:13px;color:var(--mute);background:var(--card);border:1px dashed var(--line);padding:8px 12px;border-radius:8px;margin-bottom:14px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.q h2{font-size:16px;margin:0 0 12px}
+.cons{display:grid;gap:5px;margin-bottom:14px}
+.crow{display:grid;grid-template-columns:minmax(120px,200px) 1fr 92px;gap:8px;align-items:center;font-size:14px;cursor:pointer}
+.crow .track{background:var(--line);border-radius:4px;height:10px;overflow:hidden}
+.crow .fill{background:var(--acc);height:100%}
+.crow .n{white-space:nowrap;color:var(--mute);font-size:12px;text-align:right}
+.rows{border-top:1px solid var(--line)}
+.arow{display:grid;grid-template-columns:130px repeat(3,1fr);gap:8px;padding:8px 0;border-bottom:1px solid var(--line);align-items:center}
+.arow.one{grid-template-columns:130px 1fr}
+.an{font-weight:600;font-size:13px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;background:var(--bg);border:1px solid var(--line);cursor:pointer;font-size:14px}
+.chip b{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;color:#fff;font-size:11px}
+.chip .tag{font-size:11px;color:var(--mute)}
+.hl{background:var(--hi)!important;border-color:#e0b800}
+.empty{color:var(--mute)}
+.lf{display:grid;gap:10px}
+.lc{border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.lc p{margin:4px 0 0;white-space:pre-wrap}.lc p.clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.lc button{padding:2px 0;color:var(--acc);font-size:13px}
+.tag{font-size:11px;color:var(--mute)}.pend{color:var(--mute);font-style:italic}.score{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:12px}.score b{font-size:22px}.foot{color:var(--mute);font-size:12px;margin-top:20px}
+@media(max-width:640px){.arow,.arow.one{grid-template-columns:1fr}.crow{grid-template-columns:100px 1fr 88px}.ch{display:flex;flex-wrap:wrap;gap:6px}}
+
+.cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#0b7a4b,#0a5c3a);color:#fff;border-radius:12px;padding:14px 18px;margin-bottom:16px}
+.cta b{display:block;font-size:16px}.cta span{font-size:13px;opacity:.9}
+.cta a{background:#fff;color:#0a5c3a;text-decoration:none;font-weight:700;padding:9px 16px;border-radius:8px;white-space:nowrap}
+.cta code{background:rgba(255,255,255,.18);padding:1px 6px;border-radius:4px}
+.lockwrap{position:relative;margin-top:4px}
+.ghost{filter:blur(6px);opacity:.55;user-select:none;pointer-events:none}
+.ghost .gbar{height:12px;border-radius:6px;background:var(--line);margin:10px 0}
+.ghost .gcard{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:10px}
+.lockmsg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:12px}
+.lockmsg a{background:var(--acc);color:#fff;text-decoration:none;font-weight:700;padding:9px 16px;border-radius:8px}
+.lockmsg div{font-weight:600}
+.lc.fade p{-webkit-mask-image:linear-gradient(#000 40%,transparent);mask-image:linear-gradient(#000 40%,transparent)}
+</style></head><body><div class="wrap" id="app">Loading…</div>
+<script>
+const $=s=>document.querySelector(s);
+const qs=new URLSearchParams(location.search);
+const id=qs.get('survey')||'nfl-week5-mnf-buf-lar';
+let S,sec=0,plat='dk',hl=null;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+fetch(`surveys/${id}.json`).then(r=>r.json()).then(j=>{S=j;if(S.platformToggle)plat='dk';render()}).catch(e=>$('#app').textContent='Could not load survey: '+e);
+// resolve a pick -> [{name, tag}]
+function resolve(p,sectionPlat){
+  if(typeof p==='string')return [{name:p}];
+  const pl=sectionPlat||(S.platformToggle?plat:null);
+  if(p.count&&!(pl&&p[pl]))return p.count.map(n=>({name:n,tag:'either'}));
+  if(pl&&p[pl])return [{name:p[pl],tag:p.note}];
+  return [{name:p.name,tag:p.note}];
+}
+function picks(v,sp,disp){return (Array.isArray(v)?v:[v]).filter(x=>x!=null).flatMap(p=>{const pl=sp||(S.platformToggle?plat:null);if(disp&&typeof p==='object'&&p.count&&!(pl&&p[pl]))return [{name:p.name,tag:''}];return resolve(p,sp)})}
+let curSp=null;
+function meta(n){const k=(S.aliases&&S.aliases[n])||n;const p=S.players&&S.players[k];if(!p)return '';const sal=curSp&&p[curSp]?` · $${(p[curSp]/1000).toFixed(1)}K`:'';return p.team+' '+p.pos+sal}
+function chip(p,rank){const on=hl&&hl===p.name;
+  const col=['var(--r1)','var(--r2)','var(--r3)'][rank-1]||'var(--r3)';
+  return `<span class="chip${on?' hl':''}" data-p="${esc(p.name)}">${rank?`<b style="background:${col}">${rank}</b>`:''}${esc(p.name)}${[p.tag,meta(p.name)].filter(Boolean).map(t=>` <span class="tag">${esc(t)}</span>`).join('')}</span>`}
+function question(q,sp){
+  const an=S.analysts;const tally={},rk={};let voters=0;
+  an.forEach(a=>{const v=q.answers[a];if(v==null||v==='')return;voters++;
+    const seen=new Set();picks(v,sp).forEach((p,i)=>{if(seen.has(p.name))return;seen.add(p.name);tally[p.name]=(tally[p.name]||0)+1;(rk[p.name]=rk[p.name]||[]).push(i+1)})});
+  const rows=Object.entries(tally).sort((a,b)=>b[1]-a[1]||avg(rk[a[0]])-avg(rk[b[0]]));
+  const cons=rows.map(([n,c])=>`<div class="crow${hl===n?' hl':''}" data-p="${esc(n)}"><span>${esc(n)}<br><span class="tag">${esc(meta(n))}</span></span><span class="track"><span class="fill" style="display:block;width:${c/voters*100}%"></span></span><span class="n">${c}/${voters}${q.type==='ranked'?` · avg ${avg(rk[n]).toFixed(1)}`:''}</span></div>`).join('');
+  const ar=an.map(a=>{const v=q.answers[a];
+    if(v==null||v==='')return `<div class="arow one"><span class="an">${esc(a)}</span><span class="${(S.pending||[]).includes(a)?'pend':'empty'}">${(S.pending||[]).includes(a)?'Answers pending':'—'}</span></div>`;
+    const ps=picks(v,sp,true);
+    if(q.type==='ranked')return `<div class="arow"><span class="an">${esc(a)}</span>${ps.map((p,i)=>`<span>${chip(p,i+1)}</span>`).join('')}</div>`;
+    return `<div class="arow one"><span class="an">${esc(a)}</span><span class="ch">${ps.map(p=>chip(p,0)).join(' ')}</span></div>`}).join('');
+  return `<div class="q"><h2>${esc(q.prompt)}</h2><div class="cons">${cons}</div><div class="rows">${ar}</div>${q.limit&&hidden>0?lockBlock(hidden+' more expert answers',2):''}</div>`}
+const avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
+function longform(q){const lim=q.limit||99;let shown=0;const hidden=S.analysts.length-Math.min(lim,Object.keys(q.answers).length);return `<div class="q"><h2>${esc(q.prompt)}</h2><div class="lf">${S.analysts.map(a=>{const t=q.answers[a];if(!t&&(S.pending||[]).includes(a)&&!q.limit)return `<div class="lc"><span class="an">${esc(a)}</span><p class="pend">Answers pending</p></div>`;if(!t||shown++>=lim)return '';
+  return `<div class="lc"><span class="an">${esc(a)}</span><p class="clamp">${esc(t)}</p>${t.length>260?'<button data-more>Read more</button>':''}</div>`}).join('')}</div>${q.limit&&hidden>0?lockBlock(hidden+' more expert answers',2):''}</div>`}
+
+function ctaBox(){const p=S.preview;return `<div class="cta"><div><b>${esc(p.ctaLabel)}</b><span>${esc(p.ctaBlurb||'')}${p.code?` Use code <code>${esc(p.code)}</code>`:''}</span></div><a href="${esc(p.ctaUrl)}">Join RG MVP</a></div>`}
+function ghostRows(n){return Array.from({length:n},()=>`<div class="gcard"><div class="gbar" style="width:30%"></div><div class="gbar" style="width:90%"></div><div class="gbar" style="width:70%"></div></div>`).join('')}
+function lockBlock(msg,n){const p=S.preview;return `<div class="lockwrap"><div class="ghost">${ghostRows(n)}</div><div class="lockmsg"><div>🔒 ${esc(msg)}</div><a href="${esc(p.ctaUrl)}">${esc(p.ctaLabel)}</a></div></div>`}
+function lockedQ(q){return `<div class="q"><h2>${esc(q.prompt)}</h2>${lockBlock(`${S.analysts.length} experts answered this`,3)}</div>`}
+function scoreQ(q){const sum={},n={};let wins={};
+  S.analysts.forEach(a=>{const t=q.answers[a];if(!t)return;const m=t.match(/([A-Z]+)\s+(\d+)\s*-\s*([A-Z]+)\s+(\d+)/);if(!m)return;
+    [[m[1],+m[2]],[m[3],+m[4]]].forEach(([k,v])=>{sum[k]=(sum[k]||0)+v});n.c=(n.c||0)+1;
+    const w=+m[2]>+m[4]?m[1]:m[3];wins[w]=(wins[w]||0)+1});
+  const avgs=Object.keys(sum).map(k=>`${k} <b>${(sum[k]/n.c).toFixed(1)}</b>`).join(' – ');
+  const top=Object.entries(wins).sort((a,b)=>b[1]-a[1])[0];
+  const head=n.c?`<div class="score"><span>Avg. pick: ${avgs}</span>${top?`<span class="tag">${top[1]}/${n.c} have ${esc(top[0])}</span>`:''}</div>`:'';
+  const ar=S.analysts.map(a=>{const t=q.answers[a];const pe=(S.pending||[]).includes(a);return `<div class="arow one"><span class="an">${esc(a)}</span>${t?`<span>${esc(t)}</span>`:`<span class="${pe?'pend':'empty'}">${pe?'Answers pending':'—'}</span>`}</div>`}).join('');
+  return `<div class="q"><h2>${esc(q.prompt)}</h2>${head}<div class="rows">${ar}</div></div>`}
+function render(){
+  document.title=S.title;
+  const s=S.sections[sec];const sp=s.platform||null;curSp=sp;const pn=(S.pending||[]).length;
+  const tabs=S.sections.length>1?`<div class="tabs">${S.sections.map((x,i)=>`<button data-sec="${i}" class="${i===sec?'on':''}">${esc(x.label)}</button>`).join('')}</div>`:'';
+  const tog=S.platformToggle?`<div class="seg"><button data-plat="dk" class="${plat==='dk'?'on':''}">DraftKings</button><button data-plat="fd" class="${plat==='fd'?'on':''}">FanDuel</button></div>`:'';
+  $('#app').innerHTML=`<h1>${esc(S.title)}</h1><p class="sub">${esc(S.subtitle||'')}</p><div class="bar">${tabs}${tog}</div>${S.note?`<div class="note">${esc(S.note)}</div>`:''}${pn?`<div class="note">${S.analysts.length-pn} of ${S.analysts.length} experts have submitted · more answers coming. Salaries shown are FLEX/AnyFLEX prices.</div>`:''}${S.preview?ctaBox():''}${s.questions.map(q=>q.type==='locked'?lockedQ(q):q.type==='score'?scoreQ(q):q.type==='text'?longform(q):question(q,sp)).join('')}${S.preview?ctaBox():''}<div class="foot">Updated ${new Date(S.lastUpdated).toLocaleString([], {dateStyle:'medium',timeStyle:'short'})} · Click a player to highlight them everywhere.</div>`}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-sec],[data-plat],[data-p],[data-more]');if(!t)return;
+  if(t.dataset.sec!=null)sec=+t.dataset.sec;
+  else if(t.dataset.plat)plat=t.dataset.plat;
+  else if(t.dataset.p!=null)hl=hl===t.dataset.p?null:t.dataset.p;
+  else if(t.hasAttribute('data-more')){const p=t.previousElementSibling;p.classList.toggle('clamp');t.textContent=p.classList.contains('clamp')?'Read more':'Show less';return}
+  render()});
+</script></body></html>
