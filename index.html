@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>Expert Survey</title>
+<script>try{var t=localStorage.getItem('rg-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
+<style>
+:root{--bg:#040C26;--card:#0A1840;--card2:#0E2054;--ink:#EEF1FA;--mute:#9AA6C9;--line:#1B2B63;--track:#16275F;--acc:#FE6A03;--acctext:#FF8A33;--on-acc:#06184A;
+--tog-bg:#FE6A03;--tog-ink:#06184A;--hi:rgba(254,106,3,.22);--r1:#FE6A03;--r1t:#06184A;--r2:#6E9BFF;--r2t:#06184A;--r3:#3DDC97;--r3t:#06184A}
+:root[data-theme=light]{--bg:#F3F5FB;--card:#FFFFFF;--card2:#F3F5FB;--ink:#0B1433;--mute:#58638A;--line:#DCE1F0;--track:#E4E8F5;--acc:#FE6A03;--acctext:#C24E00;--on-acc:#06184A;
+--tog-bg:#06184A;--tog-ink:#FFFFFF;--hi:#FFE9D6;--r1:#FE6A03;--r1t:#06184A;--r2:#2F5FD0;--r2t:#FFFFFF;--r3:#15803D;--r3t:#FFFFFF}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:18px 16px 60px}
+button{font:inherit;color:inherit;background:none;border:0;padding:8px 16px;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+/* header */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.logo-wrap{flex:none;display:grid;place-items:center;width:52px;height:52px;background:#fff;border-radius:12px;box-shadow:0 0 0 1px var(--line)}
+.logo{width:36px;height:auto;display:block}
+.eyebrow{font-size:clamp(17px,2.6vw,26px);font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);line-height:1.15}
+.themebtn{border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;background:var(--card);white-space:nowrap}
+.hero{margin:6px 0 18px;padding-bottom:16px;border-bottom:3px solid var(--acc)}
+.wk{display:inline-block;background:var(--acc);color:var(--on-acc);font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-right:8px}
+.wk.free{background:transparent;color:var(--acctext);border:1px solid var(--acc)}
+h1{font-size:clamp(16px,2.5vw,25px);line-height:1.1;font-weight:800;letter-spacing:-.01em;margin:10px 0 0}
+/* controls */
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;margin-bottom:10px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card)}
+.seg button{min-width:130px;font-weight:600}
+.seg button.on{background:var(--tog-bg);color:var(--tog-ink)}
+.note{font-size:13px;color:var(--mute);background:var(--card);border:1px dashed var(--line);padding:8px 12px;border-radius:8px;margin-bottom:14px;display:grid;gap:2px}
+.note b{color:var(--ink)}
+/* cards */
+.q{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+.q h2{font-size:16px;margin:0 0 12px}
+.sechead{font-size:20px;margin:28px 0 12px;padding-left:10px;border-left:4px solid var(--acc)}
+.cons{display:grid;gap:6px;margin-bottom:14px}
+.crow{display:grid;grid-template-columns:minmax(120px,200px) 1fr 290px;gap:8px;align-items:center;font-size:14px;cursor:pointer;border-radius:8px;padding:2px 4px}
+.crow.nobar{grid-template-columns:1fr auto}
+.crow .track{background:var(--track);border-radius:5px;height:10px;overflow:hidden}
+.crow .fill{background:var(--acc);height:100%;display:block}
+.crow .n{white-space:nowrap;color:var(--mute);font-size:12px;display:flex;align-items:center;justify-content:flex-end}
+.rows{border-top:1px solid var(--line)}.rows.solo{border-top:0}
+.arow{display:grid;grid-template-columns:140px repeat(3,1fr);gap:8px;padding:8px 0;border-bottom:1px solid var(--line);align-items:center}
+.arow.one{grid-template-columns:140px 1fr}
+.an{font-weight:600;font-size:13px;display:flex;align-items:center;gap:8px}
+.av{position:relative;display:inline-block;flex:none;line-height:0}
+.av img,.av .ini{border-radius:50%;object-fit:cover;display:inline-grid;place-items:center;color:#fff;font-weight:700;border:2px solid var(--card);box-sizing:content-box;margin:-2px}
+.av.pa{opacity:.4}
+.rk{position:absolute;right:-5px;bottom:-5px;min-width:14px;height:14px;border-radius:7px;font:700 9px/14px system-ui;text-align:center;font-style:normal;border:1.5px solid var(--card);padding:0 2px}
+.rk.r1,.rb.r1{background:var(--r1);color:var(--r1t)}.rk.r2,.rb.r2{background:var(--r2);color:var(--r2t)}.rk.r3,.rb.r3{background:var(--r3);color:var(--r3t)}
+.stack{display:inline-flex;gap:4px;margin-right:10px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:7px;background:var(--card2);border:1px solid var(--line);cursor:pointer;font-size:14px}
+.rb{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;font-size:11px;font-weight:700}
+.tag{font-size:11px;color:var(--mute)}
+.hl{background:var(--hi)!important;border-color:var(--acc)!important}
+.empty{color:var(--mute)}.pend{color:var(--mute);font-style:italic}
+.lf{display:grid;gap:10px}
+.lc{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--card2)}
+.lc p{margin:6px 0 0;white-space:pre-wrap}.lc p.clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.lc button{padding:2px 0;color:var(--acctext);font-size:13px;font-weight:600}
+.score{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:12px}.score b{font-size:24px;color:var(--acctext)}
+.foot{color:var(--mute);font-size:12px;margin-top:20px}
+/* cta + locks */
+.cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#06184A,#12308C);color:#fff;border-radius:14px;padding:14px 18px;margin-bottom:16px;border:1px solid #243C8F}
+.cta b{display:block;font-size:16px}.cta span{font-size:13px;opacity:.9}
+.cta a{background:var(--acc);color:#06184A;text-decoration:none;font-weight:800;padding:9px 16px;border-radius:8px;white-space:nowrap}
+.cta code{background:rgba(255,255,255,.16);padding:1px 6px;border-radius:4px}
+.lockwrap{position:relative;margin-top:4px}
+.ghost{filter:blur(6px);opacity:.55;user-select:none;pointer-events:none}
+.ghost .gbar{height:12px;border-radius:6px;background:var(--track);margin:10px 0}
+.ghost .gcard{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:10px}
+.lockmsg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:12px}
+.lockmsg a{background:var(--acc);color:#06184A;text-decoration:none;font-weight:800;padding:9px 16px;border-radius:8px}
+.lockmsg div{font-weight:700}
+@media(max-width:640px){.arow,.arow.one{grid-template-columns:1fr}.crow,.crow.nobar{grid-template-columns:1fr;gap:5px;margin-bottom:6px}.crow .n{justify-content:flex-start}.crow .track{width:100%}.ch{display:flex;flex-wrap:wrap;gap:6px}.seg button{min-width:0;flex:1}.seg{display:flex;width:100%}}
+</style></head><body><div class="wrap" id="app">Loading…</div>
+<script>
+const $=s=>document.querySelector(s);
+const qs=new URLSearchParams(location.search);
+const id=qs.get('survey')||'nfl-week5-mnf-buf-lar';
+let S,sec=0,plat='dk',hl=null,curSp=null,curSlot=null;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+fetch(`surveys/${id}.json`).then(r=>r.json()).then(j=>{S=j;if(S.platformToggle)plat='dk';{const ps=S.sections.filter(x=>x.platform);const si=ps.findIndex(x=>x.platform===qs.get('site'));if(si>=0)sec=si}render()}).catch(e=>$('#app').textContent='Could not load survey: '+e);
+const theme=()=>document.documentElement.dataset.theme;
+function resolve(p,sectionPlat){
+  if(typeof p==='string')return [{name:p}];
+  const pl=sectionPlat||(S.platformToggle?plat:null);
+  if(p.count&&!(pl&&p[pl]))return p.count.map(n=>({name:n,tag:'either'}));
+  if(pl&&p[pl])return [{name:p[pl],tag:p.note}];
+  return [{name:p.name,tag:p.note}];
+}
+function picks(v,sp,disp){return (Array.isArray(v)?v:[v]).filter(x=>x!=null).flatMap(p=>{const pl=sp||(S.platformToggle?plat:null);if(disp&&typeof p==='object'&&p.count&&!(pl&&p[pl]))return [{name:p.name,tag:''}];return resolve(p,sp)})}
+// team/pos/salary tag. DK captain slot = 1.5x FLEX price (nearest $100); FD MVP price = AnyFLEX price.
+function meta(n){const k=(S.aliases&&S.aliases[n])||n;const p=S.players&&S.players[k];if(!p)return '';
+  let sal='';if(curSp&&p[curSp]){let v=p[curSp];if(curSlot==='cpt'&&curSp==='dk')v=Math.round(v*1.5/100)*100;sal=` · $${(v/1000).toFixed(1)}K`}
+  return p.team+' '+p.pos+sal}
+function chip(p,rank){const on=hl&&hl===p.name;
+  return `<span class="chip${on?' hl':''}" data-p="${esc(p.name)}">${rank?`<b class="rb r${Math.min(rank,3)}">${rank}</b>`:''}${esc(p.name)}${[p.tag,meta(p.name)].filter(Boolean).map(t=>` <span class="tag">${esc(t)}</span>`).join('')}</span>`}
+function ini(a){const w=a.replace(/([a-z])([A-Z])/g,'$1 $2').split(/\s+/).filter(Boolean);return (w.length>1?w[0][0]+w[1][0]:a.slice(0,2)).toUpperCase()}
+function av(a,s,rank){const hue=[...a].reduce((x,c)=>(x*31+c.charCodeAt(0))%360,7);const u=S.avatars&&S.avatars[a];
+  const pend=(S.pending||[]).includes(a)?' pa':'';
+  const inner=u?`<img src="${esc(u)}" alt="" style="width:${s}px;height:${s}px">`:`<span class="ini" style="width:${s}px;height:${s}px;background:hsl(${hue} 42% 36%);font-size:${Math.round(s*.4)}px">${esc(ini(a))}</span>`;
+  return `<span class="av${pend}" title="${esc(a)}${rank?' · #'+rank:''}">${inner}${rank?`<i class="rk r${Math.min(rank,3)}">${rank}</i>`:''}</span>`}
+const avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
+function question(q,sp){
+  const an=S.analysts;const tally={},rk={},who={};let voters=0;const bars=q.bars!==false;
+  an.forEach(a=>{const v=q.answers[a];if(v==null||v==='')return;voters++;
+    const seen=new Set();picks(v,sp).forEach((p,i)=>{if(seen.has(p.name))return;seen.add(p.name);tally[p.name]=(tally[p.name]||0)+1;(rk[p.name]=rk[p.name]||[]).push(i+1);(who[p.name]=who[p.name]||[]).push([a,i+1])})});
+  const rows=Object.entries(tally).sort((a,b)=>b[1]-a[1]||avg(rk[a[0]])-avg(rk[b[0]]));
+  const cons=rows.map(([n,c])=>`<div class="crow${bars?'':' nobar'}${hl===n?' hl':''}" data-p="${esc(n)}"><span>${esc(n)}<br><span class="tag">${esc(meta(n))}</span></span>${bars?`<span class="track"><span class="fill" style="width:${c/voters*100}%"></span></span>`:''}<span class="n"><span class="stack">${who[n].sort((x,y)=>x[1]-y[1]).map(([a,r])=>av(a,30,q.type==='ranked'?r:0)).join('')}</span>${c}/${voters}${q.type==='ranked'?` · avg ${avg(rk[n]).toFixed(1)}`:''}</span></div>`).join('');
+  const ar=an.map(a=>{const v=q.answers[a];const pe=(S.pending||[]).includes(a);
+    if(v==null||v==='')return `<div class="arow one"><span class="an">${av(a,28)}${esc(a)}</span><span class="${pe?'pend':'empty'}">${pe?'Answers pending':'—'}</span></div>`;
+    const ps=picks(v,sp,true);
+    if(q.type==='ranked')return `<div class="arow"><span class="an">${av(a,28)}${esc(a)}</span>${ps.map((p,i)=>`<span>${chip(p,i+1)}</span>`).join('')}</div>`;
+    return `<div class="arow one"><span class="an">${av(a,28)}${esc(a)}</span><span class="ch">${ps.map(p=>chip(p,0)).join(' ')}</span></div>`}).join('');
+  return `<div class="q"><h2>${esc(q.prompt)}</h2>${bars?`<div class="cons">${cons}</div>`:''}<div class="rows${bars?'':' solo'}">${ar}</div></div>`}
+function longform(q){const lim=q.limit||99;let shown=0;const hidden=S.analysts.length-Math.min(lim,Object.keys(q.answers).length);return `<div class="q"><h2>${esc(q.prompt)}</h2><div class="lf">${S.analysts.map(a=>{const t=q.answers[a];if(!t&&(S.pending||[]).includes(a)&&!q.limit)return `<div class="lc"><span class="an">${av(a,28)}${esc(a)}</span><p class="pend">Answers pending</p></div>`;if(!t||shown++>=lim)return '';
+  return `<div class="lc"><span class="an">${av(a,28)}${esc(a)}</span><p>${esc(t)}</p></div>`}).join('')}</div>${q.limit&&hidden>0?lockBlock(hidden+' more expert answers',2):''}</div>`}
+function ctaBox(){const p=S.preview;return `<div class="cta"><div><b>${esc(p.ctaLabel)}</b><span>${esc(p.ctaBlurb||'')}${p.code?` Use code <code>${esc(p.code)}</code>`:''}</span></div><a href="${esc(p.ctaUrl)}">Join RG MVP</a></div>`}
+function ghostRows(n){return Array.from({length:n},()=>`<div class="gcard"><div class="gbar" style="width:30%"></div><div class="gbar" style="width:90%"></div><div class="gbar" style="width:70%"></div></div>`).join('')}
+function lockBlock(msg,n){const p=S.preview;return `<div class="lockwrap"><div class="ghost">${ghostRows(n)}</div><div class="lockmsg"><div>🔒 ${esc(msg)}</div><a href="${esc(p.ctaUrl)}">${esc(p.ctaLabel)}</a></div></div>`}
+function lockedQ(q){return `<div class="q"><h2>${esc(q.prompt)}</h2>${lockBlock(`${S.analysts.length} experts answered this`,3)}</div>`}
+function scoreQ(q){const sum={},n={};let wins={};
+  S.analysts.forEach(a=>{const t=q.answers[a];if(!t)return;const m=t.match(/([A-Z]+)\s+(\d+)\s*-\s*([A-Z]+)\s+(\d+)/);if(!m)return;
+    [[m[1],+m[2]],[m[3],+m[4]]].forEach(([k,v])=>{sum[k]=(sum[k]||0)+v});n.c=(n.c||0)+1;
+    const w=+m[2]>+m[4]?m[1]:m[3];wins[w]=(wins[w]||0)+1});
+  const avgs=Object.keys(sum).map(k=>`${k} <b>${(sum[k]/n.c).toFixed(1)}</b>`).join(' – ');
+  const top=Object.entries(wins).sort((a,b)=>b[1]-a[1])[0];
+  const head=n.c?`<div class="score"><span>Avg. pick: ${avgs}</span>${top?`<span class="tag">${top[1]}/${n.c} have ${esc(top[0])}</span>`:''}</div>`:'';
+  const ar=S.analysts.map(a=>{const t=q.answers[a];const pe=(S.pending||[]).includes(a);return `<div class="arow one"><span class="an">${av(a,28)}${esc(a)}</span>${t?`<span>${esc(t)}</span>`:`<span class="${pe?'pend':'empty'}">${pe?'Answers pending':'—'}</span>`}</div>`}).join('');
+  return `<div class="q"><h2>${esc(q.prompt)}</h2>${head}<div class="rows">${ar}</div></div>`}
+function qHtml(q,sp){curSp=sp;curSlot=q.slot||null;return q.type==='locked'?lockedQ(q):q.type==='score'?scoreQ(q):q.type==='text'?longform(q):question(q,sp)}
+function header(){
+  const parts=(S.subtitle||'').split(' · ').filter(Boolean);
+  const free=parts.length&&/preview/i.test(parts[parts.length-1])?parts.pop():null;
+  const wk=parts.length>1?parts.shift():null;const main=parts.join(' · ');
+  const dark=theme()==='dark';
+  return `<div class="top"><div class="brand"><span class="logo-wrap"><img class="logo" src="assets/rg-mark.png" alt="RotoGrinders"></span><span class="eyebrow">${esc(S.title)}</span></div><button class="themebtn" data-theme-toggle aria-label="Switch to ${dark?'light':'dark'} mode">${dark?'☀ Light mode':'☾ Dark mode'}</button></div>
+  <div class="hero">${wk?`<span class="wk">${esc(wk)}</span>`:''}${free?`<span class="wk free">${esc(free)}</span>`:''}<h1>${esc(main)}</h1></div>`}
+function render(){
+  document.title=S.title;
+  const pn=(S.pending||[]).length;
+  const platSecs=S.sections.filter(x=>x.platform);const other=S.sections.filter(x=>!x.platform);
+  if(sec>=platSecs.length)sec=0;
+  const multi=platSecs.length>1;
+  const toggle=multi?`<div class="seg" role="tablist">${platSecs.map((x,i)=>`<button data-sec="${i}" role="tab" aria-selected="${i===sec}" class="${i===sec?'on':''}">${esc(x.label)}</button>`).join('')}</div>`:'';
+  const tog=S.platformToggle?`<div class="seg"><button data-plat="dk" class="${plat==='dk'?'on':''}">DraftKings</button><button data-plat="fd" class="${plat==='fd'?'on':''}">FanDuel</button></div>`:'';
+  const active=platSecs[sec];
+  const heads=platSecs.length>0||other.length>1;
+  let body='';
+  if(active)body+=active.questions.map(q=>qHtml(q,active.platform)).join('');
+  other.forEach(s=>{body+=(heads?`<h2 class="sechead">${esc(s.label)}</h2>`:'')+s.questions.map(q=>qHtml(q,null)).join('')});
+  const notes=[pn?`<span><b>${S.analysts.length-pn} of ${S.analysts.length} experts have submitted</b> · more answers coming.</span>`:'',active&&active.salaryNote?`<span>${esc(active.salaryNote)}.</span>`:''].filter(Boolean).join('');
+  $('#app').innerHTML=`${header()}<div class="bar">${toggle}${tog}</div>${S.note?`<div class="note"><span>${esc(S.note)}</span></div>`:''}${notes?`<div class="note">${notes}</div>`:''}${S.preview?ctaBox():''}${body}${S.preview?ctaBox():''}<div class="foot">Updated ${new Date(S.lastUpdated).toLocaleString([], {dateStyle:'medium',timeStyle:'short'})} · Click a player to highlight them everywhere.</div>`;
+  try{if(multi){const u=new URL(location.href);u.searchParams.set('site',active.platform);history.replaceState(null,'',u)}}catch(e){}
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-theme-toggle],[data-sec],[data-plat],[data-p],[data-more]');if(!t)return;
+  if(t.hasAttribute('data-theme-toggle')){const n=theme()==='dark'?'light':'dark';document.documentElement.dataset.theme=n;try{localStorage.setItem('rg-theme',n)}catch(e){}}
+  else if(t.dataset.sec!=null)sec=+t.dataset.sec;
+  else if(t.dataset.plat)plat=t.dataset.plat;
+  else if(t.dataset.p!=null)hl=hl===t.dataset.p?null:t.dataset.p;
+  else if(t.hasAttribute('data-more')){const p=t.previousElementSibling;p.classList.toggle('clamp');t.textContent=p.classList.contains('clamp')?'Read more':'Show less';return}
+  render()});
+</script></body></html>
